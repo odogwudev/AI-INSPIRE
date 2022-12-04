@@ -2,4 +2,10 @@
     <string name="app_name">AI-INSPIRE</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_description">Edit the details description</string>
+    <string name="hint_reminder">Prompt</string>
+    <string name="size_256">256 by 256</string>
+    <string name="size_512">512 by 512</string>
+    <string name="generate">Generate</string>
+    <string name="size_1024">1024 by 1024</string>
 </resources>
