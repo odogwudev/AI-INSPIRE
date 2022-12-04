@@ -1,4 +1,4 @@
-package com.odogwudev.buildscriptstemplate.ai_inspire
+package com.odogwudev.buildscriptstemplate.ai_inspire.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
