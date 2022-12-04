@@ -8,4 +8,6 @@
     <string name="size_512">512 by 512</string>
     <string name="generate">Generate</string>
     <string name="size_1024">1024 by 1024</string>
+    <string name="close">Close</string>
+    <string name="download">Download</string>
 </resources>
