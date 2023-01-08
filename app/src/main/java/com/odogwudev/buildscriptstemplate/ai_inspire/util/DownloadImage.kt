@@ -9,7 +9,7 @@ import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import java.io.File
 
-abstract class ImageDownloader {
+abstract class DownloadImage {
 
     private var msg: String? = ""
     private var lastMsg = ""
@@ -31,11 +31,11 @@ abstract class ImageDownloader {
         val request = DownloadManager.Request(downloadUri).apply {
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 .setAllowedOverRoaming(false)
-                .setTitle("odogwudev_ai_$title.jpg")
+                .setTitle("dall_e_$title.jpg")
                 .setDescription("")
                 .setDestinationInExternalPublicDir(
                     directory.toString(),
-                    "odogwudev_ai_$title.jpg"
+                    "dall_e_$title.jpg"
                 )
         }
 
@@ -74,7 +74,7 @@ abstract class ImageDownloader {
             DownloadManager.STATUS_PAUSED -> "Paused"
             DownloadManager.STATUS_PENDING -> "Pending"
             DownloadManager.STATUS_RUNNING -> "Downloading..."
-            DownloadManager.STATUS_SUCCESSFUL -> "Image downloaded successfully in $directory" + File.separator + "odogwudev_ai"
+            DownloadManager.STATUS_SUCCESSFUL -> "Image downloaded successfully in $directory" + File.separator + "dall_e"
             else -> "There's nothing to download"
         }
         return msg
