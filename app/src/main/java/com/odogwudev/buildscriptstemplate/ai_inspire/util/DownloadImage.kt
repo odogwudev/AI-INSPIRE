@@ -9,7 +9,7 @@ import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import java.io.File
 
-abstract class ImageDownloader {
+abstract class DownloadImage {
 
     private var msg: String? = ""
     private var lastMsg = ""
@@ -29,13 +29,11 @@ abstract class ImageDownloader {
         val downloadUri = Uri.parse(url)
         val title = getRandomString()
         val request = DownloadManager.Request(downloadUri).apply {
-            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-                .setAllowedOverRoaming(false)
-                .setTitle("odogwudev_ai_$title.jpg")
-                .setDescription("")
+            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(
+                    false
+                ).setTitle("dall_e_$title.jpg").setDescription("")
                 .setDestinationInExternalPublicDir(
-                    directory.toString(),
-                    "odogwudev_ai_$title.jpg"
+                    directory.toString(), "dall_e_$title.jpg"
                 )
         }
 
@@ -63,9 +61,7 @@ abstract class ImageDownloader {
 
     private fun getRandomString(): String {
         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..5)
-            .map { allowedChars.random() }
-            .joinToString("")
+        return (1..5).map { allowedChars.random() }.joinToString("")
     }
 
     private fun statusMessage(directory: File, status: Int): String {
@@ -74,7 +70,7 @@ abstract class ImageDownloader {
             DownloadManager.STATUS_PAUSED -> "Paused"
             DownloadManager.STATUS_PENDING -> "Pending"
             DownloadManager.STATUS_RUNNING -> "Downloading..."
-            DownloadManager.STATUS_SUCCESSFUL -> "Image downloaded successfully in $directory" + File.separator + "odogwudev_ai"
+            DownloadManager.STATUS_SUCCESSFUL -> "Image downloaded successfully in $directory" + File.separator + "dall_e"
             else -> "There's nothing to download"
         }
         return msg

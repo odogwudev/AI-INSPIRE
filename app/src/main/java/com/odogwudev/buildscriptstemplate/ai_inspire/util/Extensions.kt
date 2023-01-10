@@ -1,4 +1,4 @@
-package com.odogwudev.buildscriptstemplate.ai_inspire.util
+package com.odogwudev.buildscriptstemplate.ai_inspire.common
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -10,6 +10,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.odogwudev.buildscriptstemplate.ai_inspire.R
+
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 
@@ -32,23 +33,17 @@ fun Context.circularProgressDrawable(): Drawable {
 fun ImageView.glideImage(url: String, isBlur: Boolean? = false) {
 
     if (isBlur == true) {
-        Glide.with(this.context)
-            .load(url)
-            .override(500, 500)
+        Glide.with(this.context).load(url).override(500, 500)
             .transition(DrawableTransitionOptions.withCrossFade())
             .apply(bitmapTransform(BlurTransformation(10, 1)))
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .placeholder(this.context.circularProgressDrawable())
-            .error(R.drawable.ic_baseline_no_photography_24)
-            .into(this)
+            .error(R.drawable.ic_baseline_no_photography_24).into(this)
     } else {
-        Glide.with(this.context)
-            .load(url)
-            .override(500, 500)
+        Glide.with(this.context).load(url).override(500, 500)
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .placeholder(this.context.circularProgressDrawable())
-            .error(R.drawable.ic_baseline_no_photography_24)
-            .into(this)
+            .error(R.drawable.ic_baseline_no_photography_24).into(this)
     }
 
 }

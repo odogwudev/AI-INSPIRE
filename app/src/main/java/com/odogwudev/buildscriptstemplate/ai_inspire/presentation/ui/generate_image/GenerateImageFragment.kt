@@ -1,60 +1,139 @@
 package com.odogwudev.buildscriptstemplate.ai_inspire.presentation.ui.generate_image
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.muratozturk.click_shrink_effect.applyClickShrink
 import com.odogwudev.buildscriptstemplate.ai_inspire.R
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.glideImage
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.gone
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.visible
+import com.odogwudev.buildscriptstemplate.ai_inspire.databinding.FragmentGenerateImageBinding
+import com.odogwudev.buildscriptstemplate.ai_inspire.util.Resource
+import com.odogwudev.buildscriptstemplate.ai_inspire.util.Sizes
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+@AndroidEntryPoint
+class GenerateImageFragment : Fragment(R.layout.fragment_generate_image) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [generate_image.newInstance] factory method to
- * create an instance of this fragment.
- */
-class GenerateImageFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val viewModel: GenerateImageViewModel by viewModels()
+    private val binding by viewBinding(FragmentGenerateImageBinding::bind)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViewCollect()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private fun initViewCollect() {
+        with(viewModel) {
+            with(binding) {
+                generateButton.setOnClickListener {
+
+                    if (promptEditText.text.toString().isEmpty().not()) {
+                        val imageSize = if (size256.isChecked) {
+                            Sizes.SIZE_256
+                        } else if (size512.isChecked) {
+                            Sizes.SIZE_512
+                        } else {
+                            Sizes.SIZE_1024
+                        }
+                        generateImage(promptEditText.text.toString(), 4, imageSize)
+                    } else {
+                        promptInputLayout.error = getString(R.string.enter_prompt)
+                    }
+
+
+                }
+                generatedImageCard.applyClickShrink()
+                generatedImageCard2.applyClickShrink()
+                generatedImageCard3.applyClickShrink()
+                generatedImageCard4.applyClickShrink()
+
+                viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                    state.collect { response ->
+                        when (response) {
+                            is Resource.Loading -> {
+                                generateButton.startAnimation()
+                                shimmerLayout.apply {
+                                    startShimmer()
+                                    visible()
+                                }
+                                generatedImagesGrid.gone()
+                            }
+                            is Resource.Success -> {
+                                shimmerLayout.apply {
+                                    stopShimmer()
+                                    gone()
+                                }
+                                generatedImagesGrid.visible()
+
+                                generateButton.revertAnimation {
+                                    generateButton.setBackgroundResource(R.drawable.rounded_bg3)
+                                }
+
+                                generatedImageView.glideImage(response.data.data[0].url)
+                                generatedImageView2.glideImage(response.data.data[1].url)
+                                generatedImageView3.glideImage(response.data.data[2].url)
+                                generatedImageView4.glideImage(response.data.data[3].url)
+
+
+                                generatedImageCard.setOnClickListener {
+                                    showImageFullPage(response.data.data[0].url)
+                                }
+                                generatedImageCard2.setOnClickListener {
+                                    showImageFullPage(response.data.data[1].url)
+                                }
+                                generatedImageCard3.setOnClickListener {
+                                    showImageFullPage(response.data.data[2].url)
+                                }
+                                generatedImageCard4.setOnClickListener {
+                                    showImageFullPage(response.data.data[3].url)
+                                }
+
+                            }
+                            is Resource.Error -> {
+                                shimmerLayout.apply {
+                                    stopShimmer()
+                                    gone()
+                                }
+                                generatedImagesGrid.gone()
+
+                                generateButton.revertAnimation {
+                                    generateButton.setBackgroundResource(R.drawable.rounded_bg3)
+                                }
+
+                                MotionToast.createColorToast(
+                                    requireActivity(),
+                                    getString(R.string.error),
+                                    response.throwable.localizedMessage ?: "Error",
+                                    MotionToastStyle.ERROR,
+                                    MotionToast.GRAVITY_TOP or MotionToast.GRAVITY_CENTER,
+                                    MotionToast.LONG_DURATION,
+                                    null
+                                )
+
+                                Log.e("Response", response.throwable.localizedMessage ?: "Error")
+                            }
+                            else -> {}
+                        }
+                    }
+                }
+            }
+
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_generate_image, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment generate_image.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            generate_image().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun showImageFullPage(imageUrl: String) {
+        findNavController().navigate(
+            GenerateImageFragmentDirections.actionGenerateImageFragmentToImageDetailFragment(
+                imageUrl
+            )
+        )
     }
 }

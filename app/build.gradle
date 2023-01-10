@@ -8,17 +8,23 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
 
 android {
     namespace 'com.odogwudev.buildscriptstemplate.ai_inspire'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.odogwudev.buildscriptstemplate.ai_inspire"
         minSdk 30
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "API_KEY", localProperties['apiKey']
+
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
