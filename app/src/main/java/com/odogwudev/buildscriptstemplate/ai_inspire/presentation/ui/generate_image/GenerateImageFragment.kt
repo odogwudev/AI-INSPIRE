@@ -9,9 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.muratozturk.click_shrink_effect.applyClickShrink
 import com.odogwudev.buildscriptstemplate.ai_inspire.R
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.glideImage
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.gone
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.visible
 import com.odogwudev.buildscriptstemplate.ai_inspire.databinding.FragmentGenerateImageBinding
-import com.odogwudev.buildscriptstemplate.ai_inspire.util.*
-import com.odogwudev.buildscriptstemplate.ai_inspire.common.*
+import com.odogwudev.buildscriptstemplate.ai_inspire.util.Resource
+import com.odogwudev.buildscriptstemplate.ai_inspire.util.Sizes
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import www.sanju.motiontoast.MotionToast
