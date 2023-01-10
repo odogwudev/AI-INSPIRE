@@ -29,13 +29,11 @@ abstract class DownloadImage {
         val downloadUri = Uri.parse(url)
         val title = getRandomString()
         val request = DownloadManager.Request(downloadUri).apply {
-            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-                .setAllowedOverRoaming(false)
-                .setTitle("dall_e_$title.jpg")
-                .setDescription("")
+            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(
+                    false
+                ).setTitle("dall_e_$title.jpg").setDescription("")
                 .setDestinationInExternalPublicDir(
-                    directory.toString(),
-                    "dall_e_$title.jpg"
+                    directory.toString(), "dall_e_$title.jpg"
                 )
         }
 
@@ -63,9 +61,7 @@ abstract class DownloadImage {
 
     private fun getRandomString(): String {
         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..5)
-            .map { allowedChars.random() }
-            .joinToString("")
+        return (1..5).map { allowedChars.random() }.joinToString("")
     }
 
     private fun statusMessage(directory: File, status: Int): String {

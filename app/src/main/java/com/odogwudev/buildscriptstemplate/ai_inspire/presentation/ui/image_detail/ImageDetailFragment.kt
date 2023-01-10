@@ -1,60 +1,119 @@
 package com.odogwudev.buildscriptstemplate.ai_inspire.presentation.ui.image_detail
 
+import android.Manifest
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.odogwudev.buildscriptstemplate.ai_inspire.R
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.Constants
+import com.odogwudev.buildscriptstemplate.ai_inspire.common.glideImage
+import com.odogwudev.buildscriptstemplate.ai_inspire.databinding.FragmentImageDetailBinding
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [generate_image.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ImageDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+@AndroidEntryPoint
+class ImageDetailFragment : BottomSheetDialogFragment(R.layout.fragment_image_detail) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private val binding by viewBinding(FragmentImageDetailBinding::bind)
+    private val viewModel: ImageDetailViewModel by viewModels()
+    private val args: ImageDetailFragmentArgs by navArgs()
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return Dialog(requireContext(), R.style.AppModalStyle)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onStart() {
+        super.onStart()
+
+        val window = dialog?.window
+
+        window?.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
+        )
+
+        window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        context?.let {
+            if (window != null) {
+                window.statusBarColor = it.getColor(android.R.color.transparent)
+            }
+        }
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        with(binding) {
+            with(viewModel) {
+                close.setOnClickListener {
+                    findNavController().popBackStack()
+                }
+                generatedImageView.glideImage(args.url)
+                download.setOnClickListener {
+                    askPermissions(args.url, requireActivity())
+                }
+
+                state.observe(viewLifecycleOwner) {
+                    if (it.isNullOrEmpty().not()) {
+                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_generate_image, container, false)
+
+    fun askPermissions(url: String, context: Context) {
+        with(viewModel) {
+            if (ContextCompat.checkSelfPermission(
+                    context, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        context as Activity, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                ) {
+                    AlertDialog.Builder(context).setTitle("Permission required")
+                        .setMessage("Permission required to save photos from the Web.")
+                        .setPositiveButton("Accept") { _, _ ->
+                            ActivityCompat.requestPermissions(
+                                context,
+                                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+                            )
+
+                            downloadImage(url)
+                        }.setNegativeButton("Deny") { dialog, _ -> dialog.cancel() }.show()
+                } else {
+                    ActivityCompat.requestPermissions(
+                        context,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+                    )
+                    downloadImage(url)
+                }
+            } else {
+                downloadImage(url)
+            }
+        }
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment generate_image.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            generate_image().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
