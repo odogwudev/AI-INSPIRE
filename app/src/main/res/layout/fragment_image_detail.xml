@@ -57,7 +57,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_bg2"
-                    android:backgroundTint="#A32828"
+                    android:backgroundTint="#63B7B7"
                     android:text="@string/close"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
