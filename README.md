@@ -30,6 +30,7 @@ MVVM (Model - View - ViewModel) Clean Architecture
 The project uses ktlint to enforce proper code style. Github actions handles continous integration, and runs ktlint and unit tests.
 
 
+
 ## Installation
 
 Minimum Api Level: 23
@@ -44,9 +45,9 @@ Build System: [Gradle](https://gradle.org/)
    git clone https://github.com/odogwudev/AI-INSPIRE.git
    ```
 3 Enter your keys in `local.properties`
-   ```sh
+   `sh
    apiKey="Enter your Token"
-    ```
+    `
 
 ## Demo
 Find below screenshots of the application
