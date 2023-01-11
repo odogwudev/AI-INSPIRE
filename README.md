@@ -51,13 +51,13 @@ Build System: [Gradle](https://gradle.org/)
 ## Demo
 Find below screenshots of the application
 
-|<img src="https://github.com/odogwudev/AI-INSPIRE/raw/master/photos/photo1.png" width=200/>|
+|<img src="https://raw.githubusercontent.com/odogwudev/AI-INSPIRE/master/photos/photo1.png" width=200/>|
 |:----:|:----:|
 
-|<img src="https://github.com/odogwudev/AI-INSPIRE/raw/master/photos/photo2.png" width=200/>|<img src="https://user-images.githubusercontent.com/29982834/188142088-ad44a9c1-e817-42b9-9e31-dc7f596c3da4.png" width=200/>|
+|<img src="https://raw.githubusercontent.com/odogwudev/AI-INSPIRE/master/photos/photo2.png" width=200/>|<img src="https://user-images.githubusercontent.com/29982834/188142088-ad44a9c1-e817-42b9-9e31-dc7f596c3da4.png" width=200/>|
 |:----:|:----:|
 
-|<img src="https://github.com/odogwudev/AI-INSPIRE/raw/master/photos/photo3.png.png" width=200/>|<img src="https://user-images.githubusercontent.com/29982834/188142311-1fea4204-cb68-4a3c-b3ac-60de6b54ca40.png" width=200/>|
+|<img src="https://raw.githubusercontent.com/odogwudev/AI-INSPIRE/master/photos/photo3.png" width=200/>|<img src="https://user-images.githubusercontent.com/29982834/188142311-1fea4204-cb68-4a3c-b3ac-60de6b54ca40.png" width=200/>|
 |:----:|:----:|
 
 ## License
